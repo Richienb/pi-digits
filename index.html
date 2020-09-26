@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+	<meta name="theme-color" content="#3F51B5">
+
+	<title>Digits of PI</title>
+	<meta name="description" content="Scroll through infinite digits of pi.">
+
+	<style>
+		body {
+			padding: 20px;
+		}
+
+		a {
+			text-decoration: none;
+			color: #2962ff;
+		}
+
+		.title {
+			font-family: "Poppins", sans-serif;
+			position: -webkit-sticky;
+			position: sticky;
+			top: 0;
+			padding-top: 20px;
+			padding-bottom: 20px;
+			margin: 0;
+			font-weight: 500;
+			font-size: 3rem;
+			background-color: white;
+			width: auto;
+		}
+
+		.by {
+			font-family: "Poppins", sans-serif;
+			font-size: 1.5rem;
+		}
+
+		.result {
+			overflow-wrap: break-word;
+			font-family: "Roboto Mono", monospace;
+		}
+
+		body::-webkit-scrollbar {
+			border-radius: 100px;
+			background-color: transparent;
+			width: 8px;
+			height: 8px;
+		}
+
+		body::-webkit-scrollbar-button {
+			height: 0;
+			width: 0;
+		}
+
+		body::-webkit-scrollbar-corner {
+			background-color: transparent;
+		}
+
+		body::-webkit-scrollbar-thumb {
+			border-radius: 100px;
+			background-color: rgba(0, 0, 0, 0.2);
+			min-height: 28px;
+		}
+
+		body::-webkit-scrollbar-thumb:hover {
+			background-color: rgba(0, 0, 0, 0.4);
+		}
+
+		body::-webkit-scrollbar-thumb:active {
+			background-color: rgba(0, 0, 0, 0.5);
+		}
+
+		body::-webkit-scrollbar-track {
+			background-clip: padding-box;
+			border-width: 0 0 0 4px;
+		}
+	</style>
+
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500&family=Roboto+Mono&display=swap">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css" integrity="sha256-l85OmPOjvil/SOvVt3HnSSjzF1TUMyT9eV0c2BzEGzU=" crossorigin="anonymous" />
+
+</head>
+
+<body>
+	<h1 class="title">Digits of PI</h1>
+	<p class="by">By <a href="https://github.com/Richienb">@Richienb</a></p>
+	<p class="result"></p>
+
+	<script type="module">
+		import $ from "https://cdn.skypack.dev/pin/cash-dom@v8.1.0-iOeTbnxQ2MB26LAamhka/min/cash-dom.js"
+		import ky from "https://cdn.skypack.dev/pin/ky@v0.23.0-P7qVb5h1NhoNLGfZzH2L/min/ky.js"
+
+		let currentDigit = 0n
+
+		$(window).on("scroll load resize", async () => {
+			while (window.innerHeight + window.scrollY >= document.body.offsetHeight - window.innerHeight * 2) {
+				const { content } = await ky("https://api.pi.delivery/v1/pi", {
+					searchParams: {
+						start: currentDigit.toString(),
+						numberOfDigits: 1000
+					},
+					cache: "force-cache"
+				}).json()
+				document.querySelector(".result").innerText += currentDigit === 0n ? `3.${content.slice(1)}` : content
+				currentDigit += 1000n
+				document.querySelector(".title").innerText = `${currentDigit} digits of PI`
+			}
+		})
+	</script>
+
+</body>
+
+</html>
