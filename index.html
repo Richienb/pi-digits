@@ -97,9 +97,9 @@
 
 		let currentDigit = 0n
 
-		$(window).on("scroll load resize", async () => {
+		const generatePi = async () => {
 			while (window.innerHeight + window.scrollY >= document.body.offsetHeight - window.innerHeight * 2) {
-				const { content } = await ky("https://api.pi.delivery/v1/pi", {
+				const {content} = await ky("https://api.pi.delivery/v1/pi", {
 					searchParams: {
 						start: currentDigit.toString(),
 						numberOfDigits: 1000
@@ -109,6 +109,11 @@
 				currentDigit += 1000n
 				document.querySelector(".title").innerText = `${currentDigit} digits of PI`
 			}
+		}
+
+		$(async () => {
+			await generatePi()
+			$(window).on("scroll resize", generatePi)
 		})
 	</script>
 
