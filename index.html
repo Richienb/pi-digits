@@ -103,8 +103,7 @@
 					searchParams: {
 						start: currentDigit.toString(),
 						numberOfDigits: 1000
-					},
-					cache: "force-cache"
+					}
 				}).json()
 				document.querySelector(".result").innerText += currentDigit === 0n ? `3.${content.slice(1)}` : content
 				currentDigit += 1000n
